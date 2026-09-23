@@ -1,0 +1,7 @@
+PROVENANCE & LICENSE
+=====================
+Burimi: file i dërguar nga përdoruesi (upload direkt).
+Autori origjinal: i paverifikuar — kodi publikohet për qëllime edukative/portofol.
+Ndryshimet: demoja web (demo/) është ndërtuar nga Erion Nezha si port/simulim i
+origjinalit; file-t në original/ janë të paprekur, byte-identikë me burimin.
+Asnjë pretendim autorësie mbi kodin origjinal.
