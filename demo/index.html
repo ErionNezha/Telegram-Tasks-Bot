@@ -1,0 +1,68 @@
+<!-- Created by Erion Nezha — © 2026 All rights reserved -->
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasks Bot — Demo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);min-height:100vh;color:#fff;display:flex;flex-direction:column;align-items:center;padding:24px}
+.card{background:#ffffff10;border:1px solid #ffffff22;border-radius:16px;padding:24px;max-width:520px;width:100%;backdrop-filter:blur(6px)}
+h1{font-size:1.4rem;margin-bottom:4px}
+.sub{color:#9fb3c8;font-size:.85rem;margin-bottom:18px}
+.sim{background:#ffb30022;border:1px solid #ffb30066;color:#ffd75c;font-size:.78rem;border-radius:8px;padding:8px 12px;margin-bottom:16px}
+.row{display:flex;gap:8px;margin-bottom:14px}
+input[type=text]{flex:1;padding:12px;border-radius:10px;border:1px solid #ffffff33;background:#00000040;color:#fff;font-size:.95rem}
+button{padding:12px 18px;border:none;border-radius:10px;background:#00d4ff;color:#04121a;font-weight:700;cursor:pointer;font-size:.9rem}
+button:hover{filter:brightness(1.1)}
+.btnrow{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.btnrow button{flex:1;background:#1b263b;color:#cfd8e3;border:1px solid #ffffff22}
+.btnrow button.active{background:#00d4ff;color:#04121a}
+ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+li{background:#00000035;border:1px solid #ffffff18;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+li .del{background:#ff5b5b;color:#fff;padding:6px 12px;border-radius:8px;font-size:.8rem}
+.empty{color:#5c6b7f;text-align:center;padding:18px;font-size:.9rem}
+.count{color:#9fb3c8;font-size:.82rem;margin-top:12px;text-align:center}
+footer{margin-top:20px;color:#5c6b7f;font-size:.8rem}
+footer strong{color:#9fb3c8}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>📝 Tasks Bot</h1>
+<div class="sub">Menaxho detyrat e tua — si boti Telegram, në browser</div>
+<div class="sim">SIMULIM WEB — boti real Telegram kërkon token; logjika është e njëjtë me <b>original/tasks.py</b>.</div>
+<div class="row">
+<input type="text" id="inp" placeholder="Shkruaj detyrën e re..." maxlength="120">
+<button onclick="addTask()">➕ Shto</button>
+</div>
+<div class="btnrow">
+<button id="bAdd" class="active" onclick="setMode('add',this)">➕ Shto detyrë</button>
+<button id="bDel" onclick="setMode('del',this)">🗑️ Fshi detyrë</button>
+<button id="bView" onclick="setMode('view',this)">📋 Detyrat</button>
+</div>
+<ul id="list"></ul>
+<div class="count" id="count"></div>
+</div>
+<footer>Krijuar nga <strong>Erion Nezha</strong> — © 2026</footer>
+<script>
+let tasks=JSON.parse(localStorage.getItem('tasks_bot')||'[]');
+let mode='add';
+function save(){localStorage.setItem('tasks_bot',JSON.stringify(tasks));}
+function setMode(m,btn){mode=m;document.querySelectorAll('.btnrow button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
+function addTask(){const v=document.getElementById('inp').value.trim();if(!v)return;tasks.push(v);document.getElementById('inp').value='';save();render();toast('✅ Detyra u shtua');}
+function delTask(i){const t=tasks.splice(i,1)[0];save();render();toast('🗑️ U fshi: '+t);}
+function toast(m){const c=document.getElementById('count');c.textContent=m;setTimeout(render,1500);}
+function render(){
+  const ul=document.getElementById('list');
+  if(!tasks.length){ul.innerHTML='<div class="empty">Nuk ke asnjë detyrë. Shto të parën! 👆</div>';}
+  else{ul.innerHTML=tasks.map((t,i)=>'<li><span>'+(i+1)+'. '+escapeHtml(t)+'</span>'+(mode==='del'?'<button class="del" onclick="delTask('+i+')">Fshi</button>':'')+'</li>').join('');}
+  document.getElementById('count').textContent='Gjithsej detyra: '+tasks.length;
+}
+function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')addTask();});
+render();
+</script>
+</body>
+</html>
